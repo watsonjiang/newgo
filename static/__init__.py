@@ -8,10 +8,11 @@ from webob.static import FileApp
 from watsonwebutil import WebMethod
 import os.path
 
-BASE_DIR='.'
+BASE_DIR=['.']
 logger=logging.getLogger("newgo.static")
 
 def static_file_handler(file_path):
-    path = os.path.join(BASE_DIR, file_path[1:])
+    path = BASE_DIR + file_path.split('/')
+    path = os.path.join(*path)
     logger.debug("Retrive static file %s", path)
     return FileApp(path); 
