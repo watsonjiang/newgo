@@ -1,0 +1,59 @@
+<div tal:define="base load: base.xhtml" metal:use-macro="base">
+  <li metal:fill-slot="menu-item-home" class="active"><a href="/home"><span>主页</span></a></li>
+  <div metal:fill-slot="workspace">
+    <span>订餐日期：</span><span tal:define="datetime import:datetime " tal:content="datetime.date.today().isoformat()"></span>
+    <hr/>
+    <span>今日菜单</span>
+    <table border="1" align="center">
+      <tr tal:repeat="item menu">
+        <td tal:content="item"/>
+      </tr>
+    </table>
+    <hr/>
+    <p><span>今日点餐：</span></p>
+    <form action="/home" method="post">
+    <table border="1" align="center">
+      <tr>
+        <th>No.</th>
+        <th>Name</th>
+        <th>Food</th>
+        <th>Price</th>
+        <th tal:condition="exists:username">Action</th>
+      </tr>
+      <tr tal:condition="not:exists:username" tal:repeat="item order_list">
+        <td tal:content="repeat.item.number">1</td>
+        <td tal:content="item[0]">华生</td>
+        <td tal:content="item[1]">carrot+beef</td>
+        <td tal:content="item[2]">15</td>
+      </tr>
+      <tr tal:condition="exists:username" tal:repeat="item order_list">
+        <td tal:content="repeat.item.number">1</td>
+        <td tal:content="item[0]">华生</td>
+        <td tal:content="item[1]">carrot+beef</td>
+        <td tal:content="item[2]">15</td>
+        <td>
+           <input type="submit" value="取消" tal:attributes="onclick string:document.getElementById('order_index').value=${repeat.item.index}"/>
+        <td>
+      </tr>
+    </table>
+    <input type="hidden" name="operation" value="cancel_order"/>
+    <input type="hidden" id="order_index" name="order_index" value=""/>
+    </form>
+    <hr/>
+    <p><span>我要点餐：</span></p>
+    <span tal:condition="not:exists:username">Please login first</span>
+    <div tal:condition="exists:username">
+    <form action="/home" method="post">
+      <p><span>username:</span><span tal:content="username"/></p>
+      <p>
+      <span>order:</span>
+      <select name="food_index">
+        <option tal:repeat="item menu" tal:attributes="value repeat.item.index" tal:content="item">冬菇鸡腿肉饭</option>
+      </select>
+      </p>
+      <input type="hidden" name="operation" value="new_order"/>
+      <input type="submit" value="Submit"/>
+    </form> 
+    </div>
+  </div>
+</div>

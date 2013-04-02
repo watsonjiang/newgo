@@ -1,0 +1,93 @@
+<html>
+  <title metal:define-slot="title_section">Newgo</title>
+  <head>
+    <link rel="icon" type="image/x-icon" href="/static/food32.ico">
+  </head>
+  <style type="text/css">
+.top{margin:auto; width:900px; height:120px; z-index:99; padding:1px; border:1px #fdd26c solid; border-bottom:1px #e1a841 solid; color:#000; background:url(http://i3.sinaimg.cn/dy/deco/2012/0914/sinahome_0803_ws_001.gif) repeat-x 0 0 #fff;}
+.workspace{margin:auto; width:900px; height:500px; padding:1px; border:1px #ff0000 solid}
+.bottom{margin:auto; width:900px; height:30px; padding:1px; border:1px #00ff00 solid}
+.menu{margin:auto; width:900px; height:32px; padding:1px; border:1px #0000ff solid}
+
+    /* from http://cssmenumaker.com/menu/blue-and-grey-sprite */
+#cssmenu ul
+{
+	margin:0;
+	padding:0;
+	list-style-type:none;
+	width:auto;
+	position:relative;
+	display:block;
+	height:30px;
+	font-size:12px;
+	font-weight:bold;
+        background:transparent url(static/nav_bg.png) repeat-x top left;
+	font-family:Arial, Helvetica, sans-serif;
+	border-bottom:1px solid #000000;
+	border-top:1px solid #000000;
+}
+
+#cssmenu li
+{
+	display:block;
+	float:left;
+	margin:0;
+	padding:0;
+}
+	
+#cssmenu li a
+{
+	display:block;
+	float:left;
+	color:#999999;
+	text-decoration:none;
+	font-weight:bold;
+	padding:8px 20px 0 20px;
+}
+	
+#cssmenu li a:hover
+{	
+	color:#FFFFFF;
+	height:22px;
+        background:transparent url(static/nav_bg.png) 0px -30px no-repeat;		
+}
+	
+
+#cssmenu li.active a
+{
+	display:inline;
+	height:22px;
+        background:transparent url(static/nav_bg.png) 0px -30px no-repeat;	
+	float:left;
+	margin:0;
+}    
+
+
+  </style>
+  <style metal:define-slot="extra_style_section">
+  </style>
+<body>
+  <div class="top">
+    <div metal:define-slot="header_section">
+       <H1>团餐宝</H1>
+    </div>
+  </div>
+
+  <div class="menu">
+    <div id="cssmenu">
+      <ul>
+        <li metal:define-slot="menu_item_home"><a href="/home"><span>主页</span></a></li>
+        <li metal:define-slot="menu_item_login"><a href="/login"><span>登陆</span></a></li>
+      </ul>  
+    </div>
+  </div>
+  <div class="workspace">
+    <div metal:define-slot="workspace">This is main workspace</div>
+  </div>
+  <div class="bottom">
+  <!--
+  <div metal:define-slot="footer_section">This is bottom </div>
+  </div>
+  -->  
+</body>
+</html>
