@@ -1,6 +1,3 @@
-import re
-import sys
-import os
 import traceback
 import logging
 from webob import Request
@@ -26,7 +23,6 @@ def _app(environ, start_response):
     return reqRouter(environ, start_response)
 
 logger = logging.getLogger("newgo")
-logging.basicConfig(level=logging.DEBUG)	
 
 def run_server():
    server = make_server("", 8080, _app)
