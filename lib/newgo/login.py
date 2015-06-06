@@ -3,8 +3,8 @@
 
 from webob import Request
 from webob import Response
-from watsonwebutil import WebMethod
-from pageloader import load_page
+from newgo.webutil import WebMethod
+from newgo.xhtml import load_page
 import csv
 import logging
 

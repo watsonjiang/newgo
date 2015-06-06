@@ -17,10 +17,9 @@ def _getRequestRouter():
     reqRouter.add_route("/home", "newgo.start_view")
     reqRouter.add_route("/login", "newgo.login_view")
     return reqRouter
-    
 
 def _app(environ, start_response):
-    reqRouter = getRequestRouter()
+    reqRouter = _getRequestRouter()
     req = Request(environ)
     if req.path_info.startswith("/static"):
         return static_file_handler(req.path_info)(environ, start_response)

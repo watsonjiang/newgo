@@ -5,11 +5,12 @@ from webob import Request
 from webob import Response
 from webutil import WebMethod
 import datetime
-from pageloader import load_page
+from xhtml import load_page
 import logging
-from watsonwebutil import UnicodeCsvReader
-from watsonwebutil import UnicodeCsvWriter
+from newgo.webutil import UnicodeCsvReader
+from newgo.webutil import UnicodeCsvWriter
 import os.path
+import codecs
 
 logger = logging.getLogger("newgo")
     
@@ -20,6 +21,7 @@ def check_file_exist(fname):
     
 def get_menu():
     m = []
+    return ["item1", "item2"]
     with codecs.open('menu.txt', 'r', 'utf-8') as f:
       for s in f:
         m.append(s)
