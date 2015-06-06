@@ -3,11 +3,10 @@
 
 from webob import Request
 from webob import Response
-from watsonwebutil import WebMethod
+from webutil import WebMethod
 import datetime
 from pageloader import load_page
 import logging
-import codecs
 from watsonwebutil import UnicodeCsvReader
 from watsonwebutil import UnicodeCsvWriter
 import os.path
