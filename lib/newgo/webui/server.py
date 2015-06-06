@@ -1,11 +1,11 @@
-import traceback
-import logging
+#!/usr/bin/python
+# -*- coding:utf8 -*-
 from webob import Request
 from webob import Response
-from webob import exc
 from newgo.webutil import ReqRouter
-from wsgiref.simple_server import make_server
-from newgo.static import static_file_handler
+from wsgiref import simple_server
+from newgo import log
+import static
 
 
 def _getRequestRouter():
@@ -19,13 +19,13 @@ def _app(environ, start_response):
     reqRouter = _getRequestRouter()
     req = Request(environ)
     if req.path_info.startswith("/static"):
-        return static_file_handler(req.path_info)(environ, start_response)
+        return static.static_file_handler(req.path_info)(environ, start_response)
     return reqRouter(environ, start_response)
 
-logger = logging.getLogger("newgo")
+logger = log.getLogger(log.LOG_MODULE_UI)
 
 def run_server():
-   server = make_server("", 8080, _app)
+   server = simple_server.make_server("", 8080, _app)
    sa = server.socket.getsockname()
    logger.info("Serving HTTP on %s port %d ...", sa[0], sa[1])
    server.serve_forever()

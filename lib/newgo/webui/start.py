@@ -3,9 +3,9 @@
 
 from webob import Request
 from webob import Response
-from webutil import WebMethod
+from newgo.webutil import WebMethod
 import datetime
-from xhtml import load_page
+import xhtml
 import logging
 from newgo.webutil import UnicodeCsvReader
 from newgo.webutil import UnicodeCsvWriter
@@ -100,7 +100,7 @@ def start_view_get(req):
          }
     if 'username' in req.session:
       kw['username'] = req.session['username']
-    rsp.unicode_body = load_page('start')(**kw)
+    rsp.unicode_body = xhtml.load_page('start')(**kw)
     return rsp 
 
 def start_view_post(req):

@@ -4,7 +4,7 @@
 from webob import Request
 from webob import Response
 from newgo.webutil import WebMethod
-from newgo.xhtml import load_page
+import xhtml
 import csv
 import logging
 
@@ -17,7 +17,7 @@ def get_login_view(req):
     kw = {}
     if 'username' in req.session: 
       kw['username'] = req.session['username']
-    rsp.unicode_body = load_page('login')(**kw)
+    rsp.unicode_body = xhtml.load_page('login')(**kw)
     return rsp
     
 def post_login_view(req):
@@ -38,7 +38,7 @@ def post_login_view(req):
     rsp.content_type = 'text/html'
     kw = {}
     kw['auth_error'] = "Name or password not correct!"   
-    rsp.unicode_body = load_page('login')(**kw)
+    rsp.unicode_body = xhtml.load_page('login')(**kw)
     return rsp
     
     
