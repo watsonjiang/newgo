@@ -3,7 +3,7 @@
 import os
 from chameleon import PageTemplateLoader
 
-def load_page(name):
+def render_page(name, kw):
    path = os.path.dirname(__file__)
    loader = PageTemplateLoader(path, '.xhtml')
-   return loader[name]
+   return loader[name](**kw)

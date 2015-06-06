@@ -6,13 +6,13 @@ from webob import Response
 from newgo.webutil import WebMethod
 import datetime
 import xhtml
-import logging
 from newgo.webutil import UnicodeCsvReader
 from newgo.webutil import UnicodeCsvWriter
 import os.path
 import codecs
+from newgo import log
 
-logger = logging.getLogger("newgo")
+logger = log.getLogger(log.LOG_MODULE_UI)
     
 def check_file_exist(fname):
     if not os.path.exists(fname):
@@ -100,7 +100,7 @@ def start_view_get(req):
          }
     if 'username' in req.session:
       kw['username'] = req.session['username']
-    rsp.unicode_body = xhtml.load_page('start')(**kw)
+    rsp.unicode_body = xhtml.render_page('start', kw)
     return rsp 
 
 def start_view_post(req):

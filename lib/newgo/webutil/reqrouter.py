@@ -108,7 +108,7 @@ class ReqRouter(object):
       return self.handle_exception(ex)(environ, start_response)
 	  	
   def handle_exception(self, ex):
-    logging.exception("Unhandled exception")
+    logger.exception("Unhandled exception")
     lines = ''.join(traceback.format_exception(*sys.exc_info()))
     return exc.HTTPInternalServerError(detail='%s' % lines)	
 	
