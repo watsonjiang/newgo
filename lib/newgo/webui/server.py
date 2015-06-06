@@ -8,11 +8,15 @@ from newgo import log
 import static
 
 
+
 def _getRequestRouter():
     reqRouter = ReqRouter()
-    reqRouter.add_route("/", "newgo.redirect_to_start_view")
-    reqRouter.add_route("/home", "newgo.start_view")
-    reqRouter.add_route("/login", "newgo.login_view")
+    import start
+    reqRouter.add_route("/", start.redirect_to_start_view)
+    import start
+    reqRouter.add_route("/home", start.start_view)
+    import login
+    reqRouter.add_route("/login", login.login_view)
     return reqRouter
 
 def _app(environ, start_response):

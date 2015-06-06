@@ -4,17 +4,17 @@
 import re
 import sys
 import traceback
-import logging
 import uuid
 import csv
 import pickle
 from webob import Request
 from webob import Response
 from webob import exc
+from newgo import log
 
 CONST_STR_SESSIONID = 'sessionid'
 
-logger = logging.getLogger("newgo")
+logger = log.getLogger(log.LOG_MODULE_UI)
 
 session_repo = {}
 
