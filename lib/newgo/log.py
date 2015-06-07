@@ -5,10 +5,14 @@ import os.path
 import logging
 import logging.config
 
-LOG_MODULE_UI = 'webui'
+LOG_MODULE_ROOT = 'newgo'
+LOG_MODULE_UI = 'newgo.webui'
+LOG_MODULE_DATASTORE = 'newgo.datastore'
 
 _loggers = {
+   LOG_MODULE_ROOT: logging.getLogger(LOG_MODULE_ROOT),
    LOG_MODULE_UI: logging.getLogger(LOG_MODULE_UI),
+   LOG_MODULE_DATASTORE: logging.getLogger(LOG_MODULE_DATASTORE),
 }
 
 def init():
