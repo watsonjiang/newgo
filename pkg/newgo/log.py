@@ -15,7 +15,7 @@ _loggers = {
    LOG_MODULE_DATASTORE: logging.getLogger(LOG_MODULE_DATASTORE),
 }
 
-def init():
+def init_logging():
    NEWGO_HOME = os.getenv('NEWGO_HOME')
    cfname = os.path.join(NEWGO_HOME, 'conf/logging.conf')
    logging.config.fileConfig(cfname)
