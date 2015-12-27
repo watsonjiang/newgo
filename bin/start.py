@@ -2,9 +2,9 @@
 # -*- coding:utf-8 -*-
 import newgo
 newgo.init_logging()
-from newgo import webui
 
+from newgo import web
 
-webui.run_server()
+web.run_server()
 
 

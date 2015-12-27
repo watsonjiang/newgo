@@ -17,11 +17,10 @@ _loggers = {
 
 def init_logging():
    NEWGO_HOME = os.getenv('NEWGO_HOME')
-   cfname = os.path.join(NEWGO_HOME, 'conf/logging.conf')
-   logging.config.fileConfig(cfname)
+   if not NEWGO_HOME:
+      raise ValueError('NEWGO_HOME is empty')
+   cf_name = os.path.join(NEWGO_HOME, 'conf/logging.conf')
+   logging.config.fileConfig(cf_name)
 
-def getLogger(module):
-   if module in _loggers.keys():
-      return _loggers[module]   
-   else:
-      raise ValueError('%s is not valid log module.' % module)
+def get_logger(name):
+   return logging.getLogger(name)
