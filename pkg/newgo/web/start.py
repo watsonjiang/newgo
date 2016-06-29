@@ -4,37 +4,22 @@
 import os.path
 import codecs
 import datetime
-import xhtml
 from webob import Response
+from newgo.web import xhtml
 from newgo.webutil import UnicodeCsvReader
 from newgo.webutil import UnicodeCsvWriter
 import newgo
 from newgo.web.req_dispatcher import Get
 
-logger = newgo.get_logger(newgo.LOG_MODULE_UI)
-
-def check_file_exist(fname):
-   if not os.path.exists(fname):
-      with open(fname, 'w') as f:   # create an empty file
-         pass
+LOGGER = newgo.get_logger(newgo.LOG_MODULE_UI)
 
 def get_menu():
    m = []
-   return ["item1", "item2"]
-   with codecs.open('menu.txt', 'r', 'utf-8') as f:
-      for s in f:
-         m.append(s)
    return m
 
-#order record format:  user,food,price,date   
+#order record format:  user,food,price,date
 def get_order_list():
    m = []
-   fname = "".join(['order', '.', datetime.date.today().isoformat()])
-   check_file_exist(fname)   
-   with open(fname, 'r') as f:
-      reader = UnicodeCsvReader(f)
-      for row in reader:
-         m.append(row)
    return m
 
 def new_order(user, food_index):
@@ -55,7 +40,7 @@ def new_order(user, food_index):
    if food_name is None:
       logger.warning("No food found (index %d). ignore this order.", food_index)
       return
-   
+
    fname = ''.join(['order', '.', datetime.date.today().isoformat()])
    check_file_exist(fname)
    with open(fname, 'a') as f:
@@ -83,12 +68,12 @@ def cancel_order(order_index):
 
 @Get('/')
 @Get('/home')
-def start_view(req):
+def get_start_view(req):
    rsp = Response()
    rsp.status_code = 200
    rsp.content_type = 'text/html'
    kw = {'menu':get_menu(),
-         'order_list':get_order_list(),  
+         'order_list':get_order_list(),
          'today':datetime.date.today().isoformat()
         }
    if 'username' in req.session:

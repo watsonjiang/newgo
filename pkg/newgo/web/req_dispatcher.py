@@ -5,8 +5,6 @@ import re
 import sys
 import traceback
 import uuid
-import csv
-import pickle
 from webob import Request
 from webob import Response
 from webob import exc
@@ -15,7 +13,7 @@ from newgo.singleton import Singleton
 
 CONST_STR_SESSIONID = 'sessionid'
 
-logger = newgo.get_logger(newgo.LOG_MODULE_UI)
+LOGGER = newgo.get_logger(newgo.LOG_MODULE_UI)
 
 session_repo = {}
 
@@ -27,55 +25,63 @@ class Get(object):
       ReqDispatcher().add_route('GET', self.path, func)
       return func
 
+class Post(object):
+   def __init__(self, path):
+      self.path = path
+
+   def __call__(self, func):
+      ReqDispatcher().add_route('POST', self.path, func)
+      return func
+
+def _template_to_regex(template):
+   regex = ''
+   last_pos = 0
+   for match in ReqDispatcher.VAR_REGEX.finditer(template):
+      regex += re.escape(template[last_pos:match.start()])
+      var_name = match.group(1)
+      expr = match.group(2) or '[^/]+'
+      expr = '(?P<%s>%s)' % (var_name, expr)
+      regex += expr
+      last_pos = match.end()
+   regex += re.escape(template[last_pos:])
+   regex = '^%s$' % regex
+   return regex
+
+
+def _load_handler(string):
+   module_name, func_name = string.split('.', 1)
+   __import__(module_name)
+   module = sys.modules[module_name]
+   handler = getattr(module, func_name)
+   return handler 	
+
 
 class ReqDispatcher(object):
    
    __metaclass__ = Singleton
 
    ALLOWED_METHODS = set(['get', 'post', 'put', 'head', 'delete'])
-   routes = []
    VAR_REGEX = re.compile(r'''
      \{            # The exact character "{"
      (\w+)         # The variable name (restricted to a-z, 0-9, _)
      (?::([^}]+))? # The optional :regex part
      \}            # The exact character "}"
      ''', re.VERBOSE)
-  
+
    def __init__(self):
       self.routes = []
 
-   def load_handler(self, string):
-      module_name, func_name = string.split('.', 1)
-      __import__(module_name)
-      module = sys.modules[module_name]
-      handler = getattr(module, func_name)
-      return handler 	
-
-   def add_route(self, method, template, handler, **vars):
+   def add_route(self, method, template, handler, **kwargs):
       if isinstance(handler, basestring):
-         handler = self.load_handler(handler)
-      self.routes.append((method, re.compile(self.template_to_regex(template)),
-                         handler, vars))
+         handler = _load_handler(handler)
+      self.routes.append((method, re.compile(_template_to_regex(template)),
+                         handler, kwargs))
 
-   def template_to_regex(self, template):
-      regex = ''
-      last_pos = 0
-      for match in ReqDispatcher.VAR_REGEX.finditer(template):
-         regex += re.escape(template[last_pos:match.start()])
-         var_name = match.group(1)
-         expr = match.group(2) or '[^/]+'
-         expr = '(?P<%s>%s)' % (var_name, expr)
-         regex += expr
-         last_pos = match.end()
-      regex += re.escape(template[last_pos:])
-      regex = '^%s$' % regex
-      return regex	
-    
    def load_session(self, sid):
       if sid in session_repo:
          return session_repo[sid]
       else:
-         return {}      
+         return {}
 
    def save_session(self, sid, session):
       session_repo[sid] = session
@@ -88,14 +94,14 @@ class ReqDispatcher(object):
          req.session = self.load_session(req.sessionid)
       else:
          req.sessionid = None
-         req.session = {}      
+         req.session = {}
       try:
-         for method, regex, handler, vars in self.routes:
+         for method, regex, handler, kwargs in self.routes:
             match = regex.match(req.path_info)
             if match:
                if method == '*' or req.method.upper() == method:
                   req.urlvars = match.groupdict()
-                  req.urlvars.update(vars)
+                  req.urlvars.update(kwargs)
                   resp = handler(req, **req.urlvars)
                   if isinstance(resp, Response):
                      if len(req.session) > 0:    #require session data 
@@ -108,10 +114,7 @@ class ReqDispatcher(object):
          return exc.HTTPNotFound()(environ, start_response)
       except exc.WSGIHTTPException as ex:
          return ex(environ, start_response)
-      except Exception as ex:
-         return self.handle_exception(ex)(environ, start_response)
-
-   def handle_exception(self, ex):
-      logger.exception("Unhandled exception")
-      lines = ''.join(traceback.format_exception(*sys.exc_info()))
-      return exc.HTTPInternalServerError(detail='%s' % lines)
+      except:
+         LOGGER.exception("Unexpected exception!")
+         lines = ''.join(traceback.format_exception(*sys.exc_info()))
+         return exc.HTTPInternalServerError(detail='%s' % lines)

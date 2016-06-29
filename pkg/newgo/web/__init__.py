@@ -1,3 +1,3 @@
 #!/usr/bin/python
 
-from server import run_server
+from newgo.web.server import run_server
